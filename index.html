@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Genuis Baccarat • Premium</title>
+
+<style>
+.summary{
+ margin:10px auto 14px;
+ padding:12px;
+ max-width:520px;
+ background:linear-gradient(180deg,#050505,#101010);
+ border-radius:12px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.25);
+ font-size:16px;
+ line-height:1.6;
+}
+.summary b{color:#ffd700}
+
+*{box-sizing:border-box}
+body{
+ margin:0;
+ padding:12px;
+ font-family:"Segoe UI",Arial;
+ background:radial-gradient(circle at top,#2a2a2a 0%,#050505 65%);
+ color:#eee;
+}
+.container{
+ max-width:1450px;
+ margin:auto;
+ position:relative;
+ background:linear-gradient(180deg,#141414,#0b0b0b);
+ padding:18px;
+ border-radius:16px;
+ box-shadow:0 0 40px rgba(255,215,0,.18),
+ inset 0 0 0 1px rgba(255,215,0,.18);
+}
+h1{
+ text-align:center;
+ color:#ffd700;
+ margin:6px 0 14px;
+ letter-spacing:1px;
+ text-shadow:0 0 10px rgba(255,215,0,.4);
+}
+.controls{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+ gap:10px;
+ margin-bottom:12px;
+}
+button{
+ padding:10px 20px;
+ font-size:15px;
+ font-weight:600;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
+ color:#fff;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),
+ 0 6px 14px rgba(0,0,0,.7);
+ transition:.18s;
+}
+button:hover{transform:translateY(-1px);opacity:.92}
+.player{background:linear-gradient(#3498db,#1f4f7a)}
+.banker{background:linear-gradient(#e74c3c,#7f1d1d)}
+.tie{background:linear-gradient(#2ecc71,#1e8449)}
+.undo{background:linear-gradient(#9b59b6,#5e3370)}
+.clear{background:linear-gradient(#95a5a6,#5f6a6a)}
+.stats{text-align:center;font-size:16px;margin-bottom:12px}
+
+.road-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.road{
+ background:linear-gradient(180deg,#000,#090909);
+ padding:12px;
+ border-radius:14px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.18),
+ 0 0 16px rgba(0,0,0,.9);
+}
+.road h3{text-align:center;margin:0 0 6px;font-size:15px;color:#ffd700}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(60,26px);
+ grid-template-rows:repeat(6,26px);
+ gap:3px;
+ overflow:hidden;
+}
+.cell{
+ width:26px;height:26px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ font-size:13px;font-weight:bold;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);
+}
+.B{background:#c0392b}
+.P{background:#2980b9}
+.T{background:#27ae60;font-size:11px}
+
+.analysis-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:14px;
+}
+.analysis{
+ background:linear-gradient(180deg,#060606,#121212);
+ padding:14px;
+ border-radius:16px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.22),
+ 0 0 14px rgba(0,0,0,.9);
+}
+.analysis h3{margin:0 0 4px;font-size:14px;color:#ffd700}
+.desc{font-size:12px;color:#bfbfbf}
+.per{font-size:13px;margin-top:2px}
+.best{
+ color:#00ff99;
+ font-weight:900;
+ font-size:3em;
+ text-shadow:0 0 14px rgba(0,255,153,.9);
+ animation:blink .9s infinite;
+}
+@keyframes blink{50%{opacity:.35}}
+.dna-row{font-size:15px;word-break:break-all;margin-top:4px}
+/* ===== PREMIUM PROGRAM BOX ===== */
+.premium-box{
+ margin:18px auto;
+ padding:20px;
+ border-radius:22px;
+ background:
+   radial-gradient(circle at top left, rgba(255,215,0,.25), transparent 60%),
+   linear-gradient(135deg,#1f2937,#000);
+ border:1px solid rgba(255,215,0,.4);
+ box-shadow:
+   0 0 0 1px rgba(255,215,0,.2) inset,
+   0 25px 60px rgba(0,0,0,.9);
+ position:relative;
+ overflow:hidden;
+ text-align:center;
+}
+
+.premium-box::before{
+ content:"";
+ position:absolute;
+ top:0;left:-40%;
+ width:60%;
+ height:100%;
+ background:linear-gradient(120deg,transparent,rgba(255,255,255,.12),transparent);
+ transform:skewX(-20deg);
+ animation:shinePremium 4s infinite linear;
+}
+
+.premium-count-p{
+  font-size:1.6em;
+  font-weight:900;
+  color:#3b82f6;
+  text-shadow:0 0 10px rgba(59,130,246,.8);
+}
+
+.premium-count-b{
+  font-size:1.6em;
+  font-weight:900;
+  color:#ef4444;
+  text-shadow:0 0 10px rgba(239,68,68,.8);
+}
+
+@keyframes shinePremium{
+ from{left:-40%}
+ to{left:120%}
+}
+
+.premium-title{
+ font-size:20px;
+ font-weight:900;
+ color:#ffd700;
+ margin-bottom:8px;
+ text-shadow:0 0 12px rgba(255,215,0,.8);
+}
+
+.premium-main{
+ font-size:3.5em;
+ font-weight:900;
+ margin:10px 0;
+}
+
+.premium-p{
+ color:#3b82f6;
+ text-shadow:0 0 20px rgba(59,130,246,.9);
+}
+
+.premium-b{
+ color:#ef4444;
+ text-shadow:0 0 20px rgba(239,68,68,.9);
+}
+
+.premium-sub{
+ font-size:14px;
+ color:#ccc;
+ margin-top:6px;
+}
+
+.premium-percent{
+ font-size:18px;
+ font-weight:bold;
+ color:#00ff99;
+ margin-top:6px;
+}
+
+.assistant-box{
+ margin:18px auto;
+ padding:20px;
+ border-radius:22px;
+ background:linear-gradient(135deg,#0f172a,#000);
+ border:1px solid #00ffff;
+ box-shadow:0 0 30px rgba(0,255,255,.4);
+ text-align:center;
+}
+
+.assistant-title{
+ font-size:18px;
+ font-weight:900;
+ color:#00ffff;
+ margin-bottom:8px;
+ text-shadow:0 0 10px rgba(0,255,255,.8);
+}
+
+.assistant-main{
+ font-size:3em;
+ font-weight:900;
+ margin:10px 0;
+}
+
+.assistant-p{
+ color:#3b82f6;
+ text-shadow:0 0 18px rgba(59,130,246,.9);
+}
+
+.assistant-b{
+ color:#ef4444;
+ text-shadow:0 0 18px rgba(239,68,68,.9);
+}
+
+.assistant-sub{
+ font-size:14px;
+ color:#ccc;
+}
+/* ===== MINI BEAD ===== */
+.mini-road{
+
+position:fixed;
+
+top:18px;
+
+right:18px;
+
+width:260px;
+
+padding:12px;
+
+border-radius:18px;
+
+background:
+linear-gradient(
+135deg,
+rgba(0,0,0,.94),
+rgba(18,18,18,.98)
+);
+
+backdrop-filter:blur(8px);
+
+border:
+1px solid rgba(255,215,0,.25);
+
+box-shadow:
+
+0 10px 35px rgba(0,0,0,.9),
+
+0 0 20px rgba(255,215,0,.15),
+
+inset 0 0 0 1px rgba(255,255,255,.05);
+
+z-index:99999;
+
+}
+
+.mini-road h3{
+
+margin:0 0 6px;
+
+text-align:center;
+
+font-size:13px;
+
+color:#ffd700;
+
+}
+
+.mini-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(12,18px);
+
+grid-template-rows:
+repeat(6,18px);
+
+gap:2px;
+
+justify-content:center;
+
+}
+
+.mini-cell{
+
+width:18px;
+height:18px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+justify-content:center;
+
+font-size:9px;
+
+font-weight:bold;
+
+}
+
+.mini-cell.B{
+background:#c0392b;
+}
+
+.mini-cell.P{
+background:#2980b9;
+}
+
+.mini-cell.T{
+background:#27ae60;
+}
+.mini-title{
+
+text-align:center;
+
+font-size:14px;
+
+font-weight:800;
+
+color:#ffd700;
+
+margin-bottom:8px;
+
+}
+
+.mini-stat{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-bottom:10px;
+
+font-size:12px;
+
+font-weight:bold;
+
+}
+
+#miniP{
+
+color:#3498db;
+
+}
+
+#miniB{
+
+color:#ff4d4d;
+
+}
+
+#miniT{
+
+color:#2ecc71;
+
+}
+
+#miniTotal{
+
+color:#ffd700;
+
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- 🔐 LOGIN -->
+<div id="loginBox" style="
+ max-width:360px;
+ margin:80px auto;
+ padding:20px;
+ background:#111;
+ border-radius:14px;
+ box-shadow:0 0 20px rgba(255,215,0,.3);
+ text-align:center;
+">
+ <h2 style="color:#ffd700">🔐 LOGIN</h2>
+ <input id="user" placeholder="User" style="width:100%;padding:10px;margin:6px 0;border-radius:8px"><br>
+ <input id="pass" type="password" placeholder="Password" style="width:100%;padding:10px;margin:6px 0;border-radius:8px"><br>
+ <button onclick="login()" style="margin-top:10px;padding:10px 20px;border-radius:10px;background:#ffd700;font-weight:bold">
+  LOGIN
+ </button>
+ <div id="err" style="color:red;display:none;margin-top:6px">❌ Login ผิด</div>
+</div>
+
+<div id="app" style="display:none">
+
+<div class="container">
+
+<h1> Genuis Baccarat 24 สาย วิศวะฯ</h1>
+
+<div class="mini-road">
+
+<div class="mini-title">
+
+Mini Bead
+
+</div>
+
+<div class="mini-stat">
+
+<span id="miniP">
+
+P:0
+
+</span>
+
+<span id="miniB">
+
+B:0
+
+</span>
+
+<span id="miniT">
+
+T:0
+
+</span>
+
+<span id="miniTotal">
+
+0
+
+</span>
+
+</div>
+
+<div
+id="miniBead"
+class="mini-grid">
+
+</div>
+
+</div>
+
+<div class="controls">
+<button class="player" onclick="addResult('P')">PLAYER</button>
+<button class="banker" onclick="addResult('B')">BANKER</button>
+<button class="tie" onclick="addResult('T')">TIE</button>
+<button class="undo" onclick="undo()">UNDO</button>
+<button class="clear" onclick="clearAll()">CLEAR</button>
+</div>
+
+<div class="stats" id="stats"></div>
+
+
+
+<div class="summary">
+  <div id="expireShow" style="margin-bottom:6px;color:#ffd700;font-weight:bold"></div>
+  <div id="summary">📊 รอข้อมูล...</div>
+</div>
+
+<!-- ⭐ วางตรงนี้เลย -->
+<div class="premium-box">
+  <div class="premium-title">
+    Baccarat 24 สาย วิศวะฯ • สายเคยผิดน้อยสุด
+  </div>
+
+  <div id="premiumPick" class="premium-main">-</div>
+
+  <div id="premiumDetail" class="premium-sub">
+    รอข้อมูล...
+  </div>
+
+  <div id="premiumPercent" class="premium-percent"></div>
+</div>
+
+
+
+<!-- 🧠 ULTRA ASSISTANT BOX -->
+<div class="assistant-box">
+  <div class="assistant-title"> ผู้ช่วยวิเคราะห์หลายชั้น (Ultra 5 Layer AI)</div>
+
+  <div id="assistantPick" class="assistant-main">-</div>
+
+  <div id="assistantDetail" class="assistant-sub">
+    รอข้อมูล...
+  </div>
+</div>
+
+<div class="road-wrapper">
+ <div class="road">
+  <h3>Bead Road</h3>
+  <div class="grid" id="bead"></div>
+ </div>
+ <div class="road">
+  <h3>Big Road</h3>
+  <div class="grid" id="bigroad"></div>
+ </div>
+</div>
+
+<div class="analysis-grid" id="analysisGrid"></div>
+</div>
+
+<script>
+
+// ===== 🔒 EXPIRE SYSTEM =====
+const EXPIRE_DATE = new Date(2026, 6, 13, 0, 0, 0);
+// 13 กรกฎาคม พ.ศ.2569 (ค.ศ.2026)
+
+if(new Date() > EXPIRE_DATE){
+  document.body.innerHTML = `
+    <div style="
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background:#000;
+      color:#ffd700;
+      font-size:22px;
+      font-weight:bold;
+      text-align:center;">
+      ❌ โปรแกรมหมดอายุแล้ว<br>
+      หมดอายุวันที่: ${EXPIRE_DATE.toLocaleDateString('th-TH')}
+    </div>
+  `;
+  throw new Error("Program Expired");
+}
+
+// ✅ แสดงวันหมดอายุ
+document.addEventListener("DOMContentLoaded", ()=>{
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const d = EXPIRE_DATE.toLocaleDateString('th-TH', options);
+
+  const year = d.split(" ")[2];
+  const formatted = d.replace(year, "พ.ศ. " + year);
+
+  const el = document.getElementById("expireShow");
+  if(el){
+    el.innerHTML = "⏳ วันหมดอายุ: " + formatted;
+  }
+});
+
+function login(){
+ const u=document.getElementById('user').value;
+ const p=document.getElementById('pass').value;
+ if(u==="1234" && p==="1234"){
+   document.getElementById('loginBox').style.display="none";
+   document.getElementById('app').style.display="block";
+ }else{
+   document.getElementById('err').style.display="block";
+ }
+}
+
+// ===== 📌 FIX strict mode element reference =====
+const stats = document.getElementById("stats");
+const bead =
+document.getElementById(
+"bead"
+);
+
+const miniBead =
+document.getElementById(
+"miniBead"
+);
+
+const miniP =
+document.getElementById(
+"miniP"
+);
+
+const miniB =
+document.getElementById(
+"miniB"
+);
+
+const miniT =
+document.getElementById(
+"miniT"
+);
+
+const miniTotal =
+document.getElementById(
+"miniTotal"
+);
+
+const bigroad =
+document.getElementById(
+"bigroad"
+);
+const analysisGrid = document.getElementById("analysisGrid");
+const summary = document.getElementById("summary");
+
+let history=[]
+let STRATEGY_COUNT=24
+let last=Array(STRATEGY_COUNT).fill(null)
+let dna=Array.from({length:STRATEGY_COUNT},()=>[])
+
+function addResult(r){
+ history.push(r)
+ if(r!=='T'){
+  last.forEach((rec,i)=>{ if(rec) dna[i].push(rec===r?'✅':'❌') })
+ }
+ render()
+}
+function undo(){
+ if(!history.length)return
+ history.pop()
+ dna.forEach(d=>d.pop())
+ render()
+}
+function clearAll(){
+ history=[]
+ last.fill(null)
+ dna.forEach(d=>d.length=0)
+ render()
+}
+
+const acc=a=>a.length?Math.round(a.filter(x=>x==='✅').length/a.length*100):0
+const lastOf=s=>s[s.length-1]
+const opp=s=>s==='B'?'P':'B'
+const cnt=(s,x)=>s.filter(v=>v===x).length
+
+function render(){
+
+stats.textContent=
+
+renderBead();
+
+renderMiniBead();
+
+renderBig();
+
+analyze();
+
+}
+
+function renderBead(){
+ bead.innerHTML=""
+ history.forEach((r,i)=>{
+  let d=document.createElement("div")
+  d.className="cell "+r
+  d.textContent=r
+  d.style.gridColumn=Math.floor(i/6)+1
+  d.style.gridRow=i%6+1
+  bead.appendChild(d)
+ })
+}
+function renderMiniBead(){
+
+miniBead.innerHTML="";
+miniBead.innerHTML="";
+
+let p =
+cnt(history,'P');
+
+let b =
+cnt(history,'B');
+
+let t =
+cnt(history,'T');
+
+miniP.textContent =
+"P:"+p;
+
+miniB.textContent =
+"B:"+b;
+
+miniT.textContent =
+"T:"+t;
+
+miniTotal.textContent =
+"Total:"+history.length;
+let data =
+history.slice(-72);
+
+data.forEach((r,i)=>{
+
+let d =
+document.createElement(
+"div"
+);
+
+d.className =
+"mini-cell "+r;
+
+d.textContent =
+r;
+
+d.style.gridColumn =
+Math.floor(i/6)+1;
+
+d.style.gridRow =
+i%6+1;
+
+miniBead.appendChild(d);
+
+});
+
+}
+
+function renderBig(){
+ bigroad.innerHTML=""
+ let col=1,row=1,lastR=null,used={}
+ history.forEach(r=>{
+  if(r==='T')return
+  if(lastR===null){col=1;row=1}
+  else if(r===lastR){
+   if(row<6 && !used[col+','+(row+1)])row++
+   else col++
+  }else{col++;row=1}
+  used[col+','+row]=1
+  let d=document.createElement("div")
+  d.className="cell "+r
+  d.textContent=r
+  d.style.gridColumn=col
+  d.style.gridRow=row
+  bigroad.appendChild(d)
+  lastR=r
+ })
+}
+
+const strategyDefs=[
+ ["Majority","ฝั่งรวม",(s)=>cnt(s,'B')>=cnt(s,'P')?'B':'P'],
+ ["StreakCut","ตัดยาว",(s)=>s.slice(-3).every(v=>v===lastOf(s))?opp(lastOf(s)):lastOf(s)],
+ ["FlipBias","ดูการกลับ",(s)=>cnt(s.slice(-5),'B')%2?'P':'B'],
+ ["Window6","หน้าต่าง6",(s)=>cnt(s.slice(-6),'B')>=4?'B':'P'],
+ ["Window8","หน้าต่าง8",(s)=>cnt(s.slice(-8),'P')>=5?'P':'B'],
+ ["Echo","สะท้อน",(s)=>s.length>2?s[s.length-3]:lastOf(s)],
+ ["Inertia","แรงค้าง",(s)=>cnt(s.slice(-4),lastOf(s))>=3?lastOf(s):opp(lastOf(s))],
+ ["Parity","เลขคู่",(s)=>s.length%2?lastOf(s):opp(lastOf(s))],
+ ["Ratio","อัตราส่วน",(s)=>cnt(s,'B')/(cnt(s,'P')+1)>1.15?'B':'P'],
+ ["Pulse","ชีพจร",(s)=>cnt(s.slice(-10),'B')===cnt(s.slice(-10),'P')?lastOf(s):opp(lastOf(s))],
+
+ ["Wave","คลื่น",(s)=>cnt(s.slice(-7),'B')>cnt(s.slice(-7),'P')?'P':'B'],
+ ["Rebound","เด้งกลับ",(s)=>s.slice(-2)[0]===s.slice(-2)[1]?opp(lastOf(s)):lastOf(s)],
+ ["Density","ความหนา",(s)=>cnt(s.slice(-9),lastOf(s))>=6?opp(lastOf(s)):lastOf(s)],
+ ["Shadow","เงาหลัง",(s)=>s.length>1?opp(s[s.length-2]):lastOf(s)],
+ ["Drift","ไหล",(s)=>cnt(s.slice(-12),'B')>cnt(s.slice(-12),'P')?'B':'P'],
+ ["Anchor","จุดยึด",(s)=>cnt(s.slice(-5),'B')===3?'B':'P'],
+ ["Snap","หักฉับ",(s)=>cnt(s.slice(-4),'B')===2?opp(lastOf(s)):lastOf(s)],
+ ["Swing","แกว่ง",(s)=>cnt(s.slice(-6),'P')>=4?'B':'P'],
+ ["Focus","โฟกัส",(s)=>cnt(s.slice(-3),'B')>=2?'B':'P'],
+ ["Mirror2","กระจก2",(s)=>s.length>3?s[s.length-4]:lastOf(s)],
+ ["Pressure","แรงกด",(s)=>cnt(s.slice(-8),'B')>=6?'P':'B'],
+ ["Tilt","เอียง",(s)=>cnt(s.slice(-10),'P')-cnt(s.slice(-10),'B')>=3?'P':'B'],
+ ["Edge","ขอบ",(s)=>cnt(s.slice(-11),'B')%3?'B':'P'],
+ ["Stability","เสถียร",(s)=>cnt(s.slice(-6),lastOf(s))>=4?lastOf(s):opp(lastOf(s))]
+]
+
+function analyze(){
+
+  let s = history.filter(x => x !== 'T')
+
+  analysisGrid.innerHTML = ""
+
+  if(s.length < 6){
+    summary.textContent = "📊 รอข้อมูล..."
+
+    document.getElementById("premiumPick").innerHTML = "-";
+    document.getElementById("premiumDetail").innerHTML = "รอข้อมูล...";
+    document.getElementById("premiumPercent").innerText = "";
+    document.getElementById("assistantPick").innerHTML = "-";
+   document.getElementById("assistantDetail").innerHTML = "รอข้อมูล...";
+    return
+  }
+
+  /* ===== วิเคราะห์ 24 สาย ===== */
+
+  let maxAcc = Math.max(...dna.map(acc))
+  let pCountAll = 0
+  let bCountAll = 0
+
+  strategyDefs.forEach((def,i)=>{
+
+     let pick = def[2](s)
+     last[i] = pick
+
+     if(acc(dna[i]) === maxAcc){
+        if(pick === 'P') pCountAll++
+        if(pick === 'B') bCountAll++
+     }
+
+     analysisGrid.innerHTML += `
+     <div class="analysis">
+        <h3>${i+1}) ${def[0]}</h3>
+        <div class="desc">${def[1]}</div>
+        <div>ตัวแทง:
+           <span class="${acc(dna[i])===maxAcc?'best':''}">${pick}</span>
+        </div>
+        <div class="per">ความแม่นยำ: ${acc(dna[i])}%</div>
+        <div class="dna-row">${dna[i].join(" ")}</div>
+     </div>`
+  })
+
+  summary.innerHTML =
+  `📊 <b>เงื่อนไข</b><br>
+  สาย % สูงสุด = ${maxAcc}%<br>
+  P = ${pCountAll} สาย<br>
+  B = ${bCountAll} สาย`
+
+  /* ===== PREMIUM PROGRAM LOGIC ===== */
+
+  let minLose = Infinity;
+  let premiumList = [];
+
+  strategyDefs.forEach((def,i)=>{
+
+     let streak = 0;
+     let maxStreak = 0;
+
+     dna[i].forEach(x=>{
+        if(x==='❌'){
+           streak++;
+           if(streak > maxStreak) maxStreak = streak;
+        }else{
+           streak = 0;
+        }
+     });
+
+     if(maxStreak < minLose){
+        minLose = maxStreak;
+        premiumList = [{pick:last[i], index:i}];
+     }
+     else if(maxStreak === minLose){
+        premiumList.push({pick:last[i], index:i});
+     }
+
+  });
+
+  if(premiumList.length){
+
+     let pCount = premiumList.filter(x=>x.pick==='P').length;
+     let bCount = premiumList.filter(x=>x.pick==='B').length;
+
+     let finalPick = "-";
+     let className = "";
+
+     if(pCount>bCount){
+        finalPick="P";
+        className="premium-p";
+     }else if(bCount>pCount){
+        finalPick="B";
+        className="premium-b";
+     }else{
+        finalPick = premiumList[0].pick;
+        className = finalPick==='P'?'premium-p':'premium-b';
+     }
+
+     let strategyNames = premiumList.map(x=>{
+        return `${x.index+1}) ${strategyDefs[x.index][0]} (${acc(dna[x.index])}%)`
+     }).join("<br>");
+
+     document.getElementById("premiumPick").innerHTML =
+        `<span class="${className}">${finalPick}</span>`;
+
+     document.getElementById("premiumDetail").innerHTML =
+        `สายที่เคยแพ้ติดกันน้อยสุด = ${minLose} ครั้ง<br>
+         P = ${pCount} สาย | B = ${bCount} สาย<br><br>
+         🔎 มาจากสาย:<br>${strategyNames}`;
+
+     document.getElementById("premiumPercent").innerText =
+        `รวมทั้งหมด ${premiumList.length} สาย`;
+        /* ============================= */
+/* ============================= */
+/* ===== ULTRA 5 LAYER AI ===== */
+/* ============================= */
+
+let pList = premiumList.filter(x=>x.pick==='P');
+let bList = premiumList.filter(x=>x.pick==='B');
+
+if(pList.length && bList.length){
+
+   /* ===== Layer 1 : ค่าเฉลี่ยความแม่น ===== */
+   const avg = arr =>
+     arr.reduce((sum,x)=>sum+acc(dna[x.index]),0)/arr.length;
+
+   let avgP = avg(pList);
+   let avgB = avg(bList);
+   let L1 = avgP>avgB?'P':'B';
+
+   /* ===== Layer 2 : โมเมนตัม 6 ไม้ล่าสุด ===== */
+   let last6 = s.slice(-6);
+   let L2 = cnt(last6,'P')>cnt(last6,'B')?'P':'B';
+
+   /* ===== Layer 3 : แรงกด 3 ไม้ ===== */
+   let last3 = s.slice(-3);
+   let L3;
+
+   if(last3.length===3 && last3.every(x=>x===last3[0])){
+      L3 = opp(last3[0]);
+   }else{
+      L3 = lastOf(s);
+   }
+
+   /* ===== Layer 4 : เทรนด์ 12 ไม้ ===== */
+   let last12 = s.slice(-12);
+   let L4 = cnt(last12,'P')>cnt(last12,'B')?'P':'B';
+
+   /* ===== Layer 5 : ความผันผวน ===== */
+   let switches = 0;
+   for(let i=1;i<s.length;i++){
+      if(s[i]!==s[i-1]) switches++;
+   }
+   let volatilityHigh = switches > (s.length/2);
+   let L5 = volatilityHigh ? opp(lastOf(s)) : lastOf(s);
+
+   /* ===== รวมคะแนน ===== */
+   let score = {P:0,B:0};
+   [L1,L2,L3,L4,L5].forEach(x=>score[x]++);
+
+   let ultraFinal = score.P>=score.B?'P':'B';
+
+   document.getElementById("assistantPick").innerHTML =
+      `<span class="${ultraFinal==='P'?'assistant-p':'assistant-b'}">${ultraFinal}</span>`;
+
+   document.getElementById("assistantDetail").innerHTML =
+      `Layer1 (%เฉลี่ย) → ${L1}<br>
+       Layer2 (6ไม้) → ${L2}<br>
+       Layer3 (แรงกด3) → ${L3}<br>
+       Layer4 (เทรนด์12) → ${L4}<br>
+       Layer5 (ผันผวน) → ${L5}<br><br>
+       คะแนนรวม: P=${score.P} | B=${score.B}<br><br>
+       <span class="premium-count-p">P = ${pCount}</span> สาย |
+       <span class="premium-count-b">B = ${bCount}</span> สาย`;
+
+}else{
+
+   document.getElementById("assistantPick").innerHTML = "-";
+   document.getElementById("assistantDetail").innerHTML =
+      "Premium ไม่ขัดแย้ง ไม่ต้องใช้ผู้ช่วย";
+   }
+   }
+}
+</script>
+</body>
+</html>
